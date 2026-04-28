@@ -1,34 +1,54 @@
-### **Project Log Entry**
+
+***
+
+# **Project Log: Flight Controller Prompt Optimization**
 
 **Date:** April 28, 2026  
-**Status:** System Architecture Phase / Prompt Optimization  
-**Component:** ESP32 Flight Controller (920kv Brushless System)
+**Author:** Lead Firmware Developer  
+**Component:** ESP32 Custom Flight Controller  
+**Status:** Architecture & Design Phase
 
----
+## **Overview**
+Refined the LLM generation prompt for the baseline flight controller code. The initial concept lacked necessary hardware specifics, which would result in unsafe or non-functional control loops. We have updated the prompt to explicitly define our propulsion system, battery voltage, and ESC protocols to ensure the generated code accounts for the high-thrust 4S architecture and standard PWM limitations.
 
-#### **Summary**
-Drafted a specialized system prompt for generating a functional quadcopter flight controller. The original concept was refined to account for **PWM duty cycles (1000–2000µs)** required by Electronic Speed Controllers (ESCs) rather than simple digital state switching.
+## **Hardware Profile Established**
+* **MCU:** ESP32
+* **Power:** 4S LiPo (14.8V nominal, 16.8V max)
+* **Propulsion:** 920kv brushless motors + 1045 (10-inch) propellers
+* **ESCs:** 30A SimonK Firmware (Standard PWM, 1000µs - 2000µs, Max 400Hz)
+* **Sensors:** MPU6050 IMU (I2C)
 
-#### **Optimized Prompt**
-> "Act as an embedded systems engineer specializing in drone flight dynamics. I am building a quadcopter using an ESP32, 920kv brushless motors (driven by standard ESCs), and an MPU6050 IMU. 
-> 
-> **Hardware setup:**
-> * MPU6050: SDA -> GPIO 22, SCL -> GPIO 21.
-> * ESC PWM signals (50Hz, 1000µs-2000µs): Front Left -> 12, Front Right -> 13, Back Left -> 14, Back Right -> 26.
-> 
-> Please write Arduino C++ framework code using the `ESP32Servo` library and a standard MPU6050 library that implements a basic 'stabilize' mode. The code must include:
-> 1. An initialization routine that calibrates the IMU.
-> 2. A distinct arming sequence (e.g., forcing 1000µs to all motors for 5 seconds to initialize ESCs).
-> 3. A basic PID loop structure for pitch and roll stabilization.
-> 4. A standard Quad-X motor mixing algorithm mapping the PID outputs and a base throttle to the 1000-2000µs ESC limits.
-> Provide placeholder variables for PID tuning constants ($K_p, K_i, K_d$)."
+## **Optimized LLM Generation Prompt**
+*This prompt is version-locked for generating the baseline `main.cpp` logic.*
 
-#### **Technical Considerations**
-* **ESC Communication:** Shifted from "high/low" logic to **Servo Microseconds** for motor control.
-* **Physics Loop:** Integrated a **PID (Proportional-Integral-Derivative)** control loop to handle micro-adjustments for stability.
-* **Safety:** Identified the critical need for an "arming sequence" to prevent motor spin-up during gyro calibration.
+```text
+Act as an expert embedded systems engineer specializing in drone flight dynamics. Please write a complete Arduino C++ flight controller sketch for a custom ESP32 quadcopter.
 
-#### **Next Steps**
-* Bench test PID response with **propellers removed**.
-* Implement Mahony/Madgwick filter for better IMU noise rejection.
-* Define RC input protocol (SBUS/ELRS) for manual override.
+Hardware Profile:
+* MCU: ESP32
+* Power: 4S LiPo (14.8V nominal, 16.8V max).
+* Propulsion: 920kv brushless motors with 1045 (10-inch) propellers.
+* ESCs: 30A SimonK Firmware. 
+    * Protocol: Standard PWM (1000µs - 2000µs). 
+    * Pins: Front Left -> 12, Front Right -> 13, Back Left -> 14, Back Right -> 26.
+* IMU: MPU6050 via I2C (SDA -> GPIO 22, SCL -> GPIO 21).
+
+Software & Control Requirements:
+1. Timing & Loop: Run the main physics loop at a strict 250Hz (4000µs loop time) using micros() for precision, avoiding blocking delay() functions in the main loop.
+2. Motor Control: Use the ESP32Servo library. Set the ESC update rate to 400Hz if supported by the library, otherwise default to 50Hz.
+3. IMU Filtering: Read raw MPU6050 data and apply a Complementary Filter (Angle = 0.98 * (Angle + Gyro * dt) + 0.02 * Accel) to calculate pitch and roll. This is critical to filter out the heavy motor vibrations from the 10-inch props.
+4. PID Controller: Implement a PID loop for Pitch and Roll. Because this is a high-thrust 4S setup, keep initial Kp values conservative (e.g., 1.0). Crucially, include Anti-Integral Windup by capping the integral term to prevent the drone from flipping on spool-up.
+5. Motor Mixing: Implement a standard Quad-X mixing algorithm. Set the base_throttle to 1100µs to account for the aggressive 4S power curve.
+
+Safety Requirements (CRITICAL):
+* Arming Sequence: On boot, force all ESCs to 1000µs for 5 seconds while the MPU6050 calibrates gyro offsets. Print arming status to the Serial monitor.
+* Tilt Kill-Switch: If the calculated pitch or roll angle ever exceeds 45 degrees, immediately force all motor outputs to 1000µs to prevent runaway crashes.
+* Voltage Monitoring: Include a placeholder function to read battery voltage from an analog pin (assume a voltage divider is used) and trigger a serial warning if voltage drops below 14.0V.
+```
+
+## **Next Steps / Action Items**
+- [ ] Feed the optimized prompt into the LLM and generate the baseline `main.cpp`.
+- [ ] Flash the generated code to the ESP32.
+- [ ] **SAFETY CHECK:** Physically remove all 4 propellers from the motors.
+- [ ] Connect the ESP32 to the Serial Monitor (115200 baud) and monitor the boot sequence.
+- [ ] Perform a physical bench test: tilt the drone frame by hand and listen for correct ESC/motor compensation (motors should spool up on the side being dipped).
