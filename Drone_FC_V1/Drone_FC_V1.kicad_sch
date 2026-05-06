@@ -1,0 +1,140 @@
+(kicad_sch
+	(version 20250114)
+	(generator "eeschema")
+	(generator_version "9.0")
+	(uuid "f3531ee8-8bb4-4139-a0a9-75a9c1faf3fc")
+	(paper "A4")
+	(lib_symbols)
+	(sheet
+		(at 213.995 84.455)
+		(size 50.165 29.21)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "30e2ed00-1ae9-4f25-b451-d64147e1b4df")
+		(property "Sheetname" "External_Interface"
+			(at 213.995 83.7434 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "interfaces.kicad_sch"
+			(at 213.995 114.2496 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "Drone_FC_V1"
+				(path "/f3531ee8-8bb4-4139-a0a9-75a9c1faf3fc"
+					(page "4")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 116.84 84.455)
+		(size 48.26 27.94)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "6a931220-293b-4112-b5ef-5a17f9974083")
+		(property "Sheetname" "Logic_and_Sensors"
+			(at 116.84 83.7434 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "logic_sensors.kicad_sch"
+			(at 116.84 112.9796 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "Drone_FC_V1"
+				(path "/f3531ee8-8bb4-4139-a0a9-75a9c1faf3fc"
+					(page "3")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 28.575 84.455)
+		(size 51.435 27.94)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "8a6bc577-dfbd-4518-9d70-d8da7ed7233f")
+		(property "Sheetname" "Power_Distribution"
+			(at 28.575 83.7434 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "power.kicad_sch"
+			(at 28.575 112.9796 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "Drone_FC_V1"
+				(path "/f3531ee8-8bb4-4139-a0a9-75a9c1faf3fc"
+					(page "2")
+				)
+			)
+		)
+	)
+	(sheet_instances
+		(path "/"
+			(page "1")
+		)
+	)
+	(embedded_fonts no)
+)
