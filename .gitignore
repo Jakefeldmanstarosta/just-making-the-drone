@@ -1,0 +1,27 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+
+# KiCad - autosave / lock / backup noise (the explicit -backups/ folder is kept)
+*-backups/*.bak
+~*.lck
+_autosave-*
+\#auto_saved_files\#
+fp-info-cache
+
+# Arduino build artifacts
+build/
+*.hex
+*.bin
+
+# Secrets - never commit
+.env
+.env.*
+*.key
+*.pem
+secrets/
