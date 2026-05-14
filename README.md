@@ -1,6 +1,6 @@
 # Just Making The Drone — Company Workspace
 
-Welcome to the Just Making The Drone company repository. This is the single source of truth for everything we build, ship, sell, and operate.
+Welcome to the Just Making The Drone company repository. 
 
 ## Repository layout
 
